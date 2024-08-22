@@ -43,7 +43,6 @@ public record Weight(BigInteger weightGrams) implements Comparable<Weight> {
         return weightGrams.compareTo(weight.weightGrams) == 0;
     }
 
-
     @Override
     public int compareTo(Weight w) {
         return w.weightGrams().compareTo(weightGrams());

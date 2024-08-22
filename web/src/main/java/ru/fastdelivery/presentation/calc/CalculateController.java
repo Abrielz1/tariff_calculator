@@ -24,8 +24,12 @@ import ru.fastdelivery.usecase.TariffCalculateUseCase;
 @RequiredArgsConstructor
 @Tag(name = "Расчеты стоимости доставки")
 public class CalculateController {
+
     private final TariffCalculateUseCase tariffCalculateUseCase;
+
     private final CurrencyFactory currencyFactory;
+
+    private final CalculateService calculateService;
 
     @PostMapping
     @Operation(summary = "Расчет стоимости по упаковкам груза")
@@ -35,7 +39,14 @@ public class CalculateController {
     })
     public CalculatePackagesResponse calculate(
             @Valid @RequestBody CalculatePackagesRequest request) {
-        var packsWeights = request.packages().stream()
+
+       return calculateService.calculate(request);
+    }
+}
+
+
+/*
+ var packsWeights = request.packages().stream()
                 .map(CargoPackage::weight)
                 .map(Weight::new)
                 .map(Pack::new)
@@ -44,7 +55,6 @@ public class CalculateController {
         var shipment = new Shipment(packsWeights, currencyFactory.create(request.currencyCode()));
         var calculatedPrice = tariffCalculateUseCase.calc(shipment);
         var minimalPrice = tariffCalculateUseCase.minimalPrice();
-        return new CalculatePackagesResponse(calculatedPrice, minimalPrice);
-    }
-}
 
+        return new CalculatePackagesResponse(calculatedPrice, minimalPrice);
+*/

@@ -1,14 +1,17 @@
 package ru.fastdelivery.presentation.api.response;
 
 import ru.fastdelivery.domain.common.price.Price;
-
 import java.math.BigDecimal;
 
 public record CalculatePackagesResponse(
+
         BigDecimal totalPrice,
+
         BigDecimal minimalPrice,
+
         String currencyCode
 ) {
+
     public CalculatePackagesResponse(Price totalPrice, Price minimalPrice) {
         this(totalPrice.amount(), minimalPrice.amount(), totalPrice.currency().getCode());
 
