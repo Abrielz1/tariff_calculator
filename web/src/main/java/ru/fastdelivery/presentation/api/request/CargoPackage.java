@@ -5,8 +5,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import ru.fastdelivery.domain.common.delivery.Departure;
-import ru.fastdelivery.domain.common.delivery.Destination;
 import ru.fastdelivery.domain.common.dimesions.CargoDimensions;
 import java.math.BigInteger;
 
@@ -21,14 +19,6 @@ public record CargoPackage(
 
         @Positive
         @NotNull
-        CargoDimensions dimensions,
-
-        @Positive
-        @NotNull
-        Destination destination,
-
-        @Positive
-        @NotNull
-        Departure departure
+        CargoDimensions dimensions
 ) {
 }
