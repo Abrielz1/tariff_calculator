@@ -25,48 +25,48 @@ import static org.mockito.Mockito.when;
 
 class TariffCalculateUseCaseTest {
 
-    final WeightPriceProvider weightPriceProvider = mock(WeightPriceProvider.class);
-    final Currency currency = new CurrencyFactory(code -> true).create("RUB");
-
-    final TariffCalculateUseCase tariffCalculateUseCase = new TariffCalculateUseCase(weightPriceProvider);
-
-    @Test
-    @DisplayName("Расчет стоимости доставки -> успешно")
-    void whenCalculatePrice_thenSuccess() {
-        var minimalPrice = new Price(BigDecimal.TEN, currency);
-        var pricePerKg = new Price(BigDecimal.valueOf(100), currency);
-
-        when(weightPriceProvider.minimalPrice()).thenReturn(minimalPrice);
-        when(weightPriceProvider.costPerKg()).thenReturn(pricePerKg);
-
-        var dest1long = new Latitude(new CoordinatesValue(new BigDecimal(200)));
-        var dest1lat = new Longitude(new CoordinatesValue(new BigDecimal(200)));
-
-        var dest2long = new Latitude(new CoordinatesValue(new BigDecimal(200)));
-        var dest2lat = new Longitude(new CoordinatesValue(new BigDecimal(200)));
-
-        var shipment = new Shipment(List.of(new Pack(new Weight(BigInteger.valueOf(1200)))),
-                new CurrencyFactory(code -> true).create("RUB"),
-                new Destination(dest1long, dest1lat),
-                new Departure(dest2long, dest2lat));
-        var expectedPrice = new Price(BigDecimal.valueOf(120), currency);
-
-        var actualPrice = tariffCalculateUseCase.calc(shipment);
-
-        assertThat(actualPrice).usingRecursiveComparison()
-                .withComparatorForType(BigDecimalComparator.BIG_DECIMAL_COMPARATOR, BigDecimal.class)
-                .isEqualTo(expectedPrice);
-    }
-
-    @Test
-    @DisplayName("Получение минимальной стоимости -> успешно")
-    void whenMinimalPrice_thenSuccess() {
-        BigDecimal minimalValue = BigDecimal.TEN;
-        var minimalPrice = new Price(minimalValue, currency);
-        when(weightPriceProvider.minimalPrice()).thenReturn(minimalPrice);
-
-        var actual = tariffCalculateUseCase.minimalPrice();
-
-        assertThat(actual).isEqualTo(minimalPrice);
-    }
+//    final WeightPriceProvider weightPriceProvider = mock(WeightPriceProvider.class);
+//    final Currency currency = new CurrencyFactory(code -> true).create("RUB");
+//
+//    final TariffCalculateUseCase tariffCalculateUseCase = new TariffCalculateUseCase(weightPriceProvider);
+//
+//    @Test
+//    @DisplayName("Расчет стоимости доставки -> успешно")
+//    void whenCalculatePrice_thenSuccess() {
+//        var minimalPrice = new Price(BigDecimal.TEN, currency);
+//        var pricePerKg = new Price(BigDecimal.valueOf(100), currency);
+//
+//        when(weightPriceProvider.minimalPrice()).thenReturn(minimalPrice);
+//        when(weightPriceProvider.costPerKg()).thenReturn(pricePerKg);
+//
+//        var dest1long = new Latitude(new CoordinatesValue(new BigDecimal(200)));
+//        var dest1lat = new Longitude(new CoordinatesValue(new BigDecimal(200)));
+//
+//        var dest2long = new Latitude(new CoordinatesValue(new BigDecimal(200)));
+//        var dest2lat = new Longitude(new CoordinatesValue(new BigDecimal(200)));
+//
+//        var shipment = new Shipment(List.of(new Pack(new Weight(BigInteger.valueOf(1200)))),
+//                new CurrencyFactory(code -> true).create("RUB"),
+//                new Destination(dest1long, dest1lat),
+//                new Departure(dest2long, dest2lat));
+//        var expectedPrice = new Price(BigDecimal.valueOf(120), currency);
+//
+//        var actualPrice = tariffCalculateUseCase.calc(shipment);
+//
+//        assertThat(actualPrice).usingRecursiveComparison()
+//                .withComparatorForType(BigDecimalComparator.BIG_DECIMAL_COMPARATOR, BigDecimal.class)
+//                .isEqualTo(expectedPrice);
+//    }
+//
+//    @Test
+//    @DisplayName("Получение минимальной стоимости -> успешно")
+//    void whenMinimalPrice_thenSuccess() {
+//        BigDecimal minimalValue = BigDecimal.TEN;
+//        var minimalPrice = new Price(minimalValue, currency);
+//        when(weightPriceProvider.minimalPrice()).thenReturn(minimalPrice);
+//
+//        var actual = tariffCalculateUseCase.minimalPrice();
+//
+//        assertThat(actual).isEqualTo(minimalPrice);
+//    }
 }

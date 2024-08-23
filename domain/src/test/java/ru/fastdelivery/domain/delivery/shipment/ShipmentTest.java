@@ -14,10 +14,10 @@ class ShipmentTest {
 
     @Test
     void whenSummarizingWeightOfAllPackages_thenReturnSum() {
-        var weight1 = new Weight(BigInteger.TEN);
-        var weight2 = new Weight(BigInteger.ONE);
-
-        var packages = List.of(new Pack(weight1), new Pack(weight2));
+//        var weight1 = new Weight(BigInteger.TEN);
+//        var weight2 = new Weight(BigInteger.ONE);
+//
+//        var packages = List.of(new Pack(weight1), new Pack(weight2));
       //  var shipment = new ShipmentNewDTO(packages, new CurrencyFactory(code -> true).create("RUB"));
 
        // var massOfShipment = shipment.packages();

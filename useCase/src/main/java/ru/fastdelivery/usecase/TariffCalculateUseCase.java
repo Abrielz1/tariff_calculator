@@ -1,10 +1,13 @@
 package ru.fastdelivery.usecase;
 
 import lombok.RequiredArgsConstructor;
+import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.price.Price;
+import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
 
 import javax.inject.Named;
+import java.math.BigInteger;
 
 @Named
 @RequiredArgsConstructor
@@ -12,24 +15,29 @@ public class TariffCalculateUseCase {
 
     private final WeightPriceProvider weightPriceProvider;
 
-    public Price calc(Shipment shipment) {
-        var weightAllPackagesKg = shipment.weightAllPackages().kilograms();
-        var minimalPrice = weightPriceProvider.minimalPrice();
+    private final CurrencyFactory currencyFactory;
 
-        return weightPriceProvider
-                .costPerKg()
-                .multiply(weightAllPackagesKg)
-                .max(minimalPrice);
-    }
+    public Price calculatorPriceByCargoWeight(Shipment shipment) {
 
-    public Price minimalPrice() {
-        return weightPriceProvider.minimalPrice();
-    }
-
-
-    public Price priceCalculator(Shipment cargo) {
-
+        this.isValidate(shipment);
 
         return null;
+    }
+
+    private void isValidate(Shipment shipment) {
+        var currency = currencyFactory.create(shipment.getCurrency().getCode());
+
+        if (!currency.getCode().equals("RUB")) {
+            throw new RuntimeException(); //todo слепить спец исключение
+        }
+
+        shipment.getPackages().forEach(t -> {
+
+            if (!t.weight().greaterThan(new Weight(new BigInteger(String.valueOf(150000))))) {
+                throw new RuntimeException();//todo слепить спец исключение
+            }
+
+            //todo слепить спец проверку размеров
+        });
     }
 }
