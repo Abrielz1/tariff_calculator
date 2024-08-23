@@ -9,6 +9,7 @@ import javax.inject.Named;
 @Named
 @RequiredArgsConstructor
 public class TariffCalculateUseCase {
+
     private final WeightPriceProvider weightPriceProvider;
 
     public Price calc(Shipment shipment) {
@@ -23,5 +24,12 @@ public class TariffCalculateUseCase {
 
     public Price minimalPrice() {
         return weightPriceProvider.minimalPrice();
+    }
+
+
+    public Price priceCalculator(Shipment cargo) {
+
+
+        return null;
     }
 }

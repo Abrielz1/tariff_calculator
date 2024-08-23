@@ -1,30 +1,26 @@
 package ru.fastdelivery.domain.delivery.shipment;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.fastdelivery.domain.common.currency.Currency;
 import ru.fastdelivery.domain.common.delivery.Departure;
 import ru.fastdelivery.domain.common.delivery.Destination;
-import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
-
 import java.util.List;
 
-/**
- * @param packages упаковки в грузе
- * @param currency валюта объявленная для груза
- */
-public record Shipment(
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Shipment {
 
-        List<Pack> packages,
+    List<Pack> packages;
 
-        Currency currency,
+    Currency currency;
 
-        Destination destination,
+    Destination destination;
 
-        Departure departure
-) {
-    public Weight weightAllPackages() {
-        return packages.stream()
-                .map(Pack::weight)
-                .reduce(Weight.zero(), Weight::add);
-    }
+    Departure departure;
 }

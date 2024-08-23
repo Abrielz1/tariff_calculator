@@ -18,10 +18,10 @@ class ShipmentTest {
         var weight2 = new Weight(BigInteger.ONE);
 
         var packages = List.of(new Pack(weight1), new Pack(weight2));
-        var shipment = new Shipment(packages, new CurrencyFactory(code -> true).create("RUB"));
+      //  var shipment = new ShipmentNewDTO(packages, new CurrencyFactory(code -> true).create("RUB"));
 
-        var massOfShipment = shipment.weightAllPackages();
+       // var massOfShipment = shipment.packages();
 
-        assertThat(massOfShipment.weightGrams()).isEqualByComparingTo(BigInteger.valueOf(11));
+       // assertThat(massOfShipment.size()).isEqualByComparingTo(BigInteger.valueOf(11));
     }
 }

@@ -14,6 +14,8 @@ import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
+import ru.fastdelivery.domain.delivery.shipment.ShipmentMapper;
+import ru.fastdelivery.domain.delivery.shipment.ShipmentNewDTO;
 import ru.fastdelivery.presentation.api.request.CalculatePackagesRequest;
 import ru.fastdelivery.presentation.api.request.CargoPackage;
 import ru.fastdelivery.presentation.api.response.CalculatePackagesResponse;
@@ -25,36 +27,24 @@ import ru.fastdelivery.usecase.TariffCalculateUseCase;
 @Tag(name = "Расчеты стоимости доставки")
 public class CalculateController {
 
-    private final TariffCalculateUseCase tariffCalculateUseCase;
-
     private final CurrencyFactory currencyFactory;
-
-    private final CalculateService calculateService;
 
     @PostMapping
     @Operation(summary = "Расчет стоимости по упаковкам груза")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successful operation"),
-        @ApiResponse(responseCode = "400", description = "Invalid input provided")
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "400", description = "Invalid input provided")
     })
     public CalculatePackagesResponse calculate(
-            @Valid @RequestBody CalculatePackagesRequest request) {
+            @Valid @RequestBody ShipmentNewDTO newCargo) {
 
-       return calculateService.calculate(request);
+
+        var currency = currencyFactory.create(newCargo.currency().getCode());
+
+        Shipment cargo = ShipmentMapper.toShipment(newCargo);
+
+        cargo.setCurrency(currency);
+
+        return null;
     }
 }
-
-
-/*
- var packsWeights = request.packages().stream()
-                .map(CargoPackage::weight)
-                .map(Weight::new)
-                .map(Pack::new)
-                .toList();
-
-        var shipment = new Shipment(packsWeights, currencyFactory.create(request.currencyCode()));
-        var calculatedPrice = tariffCalculateUseCase.calc(shipment);
-        var minimalPrice = tariffCalculateUseCase.minimalPrice();
-
-        return new CalculatePackagesResponse(calculatedPrice, minimalPrice);
-*/

@@ -5,6 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.fastdelivery.domain.common.currency.Currency;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
+import ru.fastdelivery.domain.common.delivery.Departure;
+import ru.fastdelivery.domain.common.delivery.Destination;
+import ru.fastdelivery.domain.common.destinations.CoordinatesValue;
+import ru.fastdelivery.domain.common.destinations.Latitude;
+import ru.fastdelivery.domain.common.destinations.Longitude;
 import ru.fastdelivery.domain.common.price.Price;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
@@ -34,8 +39,16 @@ class TariffCalculateUseCaseTest {
         when(weightPriceProvider.minimalPrice()).thenReturn(minimalPrice);
         when(weightPriceProvider.costPerKg()).thenReturn(pricePerKg);
 
+        var dest1long = new Latitude(new CoordinatesValue(new BigDecimal(200)));
+        var dest1lat = new Longitude(new CoordinatesValue(new BigDecimal(200)));
+
+        var dest2long = new Latitude(new CoordinatesValue(new BigDecimal(200)));
+        var dest2lat = new Longitude(new CoordinatesValue(new BigDecimal(200)));
+
         var shipment = new Shipment(List.of(new Pack(new Weight(BigInteger.valueOf(1200)))),
-                new CurrencyFactory(code -> true).create("RUB"));
+                new CurrencyFactory(code -> true).create("RUB"),
+                new Destination(dest1long, dest1lat),
+                new Departure(dest2long, dest2lat));
         var expectedPrice = new Price(BigDecimal.valueOf(120), currency);
 
         var actualPrice = tariffCalculateUseCase.calc(shipment);
