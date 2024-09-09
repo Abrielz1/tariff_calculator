@@ -1,5 +1,4 @@
 package ru.fastdelivery.presentation.exception;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,4 +12,3 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.httpStatus());
     }
 }
-
