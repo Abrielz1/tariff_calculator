@@ -7,16 +7,14 @@ import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
 import javax.inject.Named;
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named
 @RequiredArgsConstructor
 public class TariffCalculateUseCase {
-
-    private final WeightPriceProvider weightPriceProvider;
 
     private final CurrencyFactory currencyFactory;
 
@@ -26,11 +24,18 @@ public class TariffCalculateUseCase {
     public Price calculatorPriceByCargoWeight(Shipment shipment) {
 
         this.isValidate(shipment);
+        this.computerOfVolumes(shipment);
+        this.computerOfPriceFullVolumeOfPackages(shipment);
 
-        List<Double> packageVolumesList = this.computerOfVolumes(shipment);
-        List<Double> pricePerPackage = this.computerOfPriceFullVolumeOfPackages(packageVolumesList);
+        shipment.setTotalPrice(shipment.getTotalVolumeOfCargo() * shipment.getTotalVolumeOfCargo());
 
-        return null;
+        shipment.getPackages().sort(Comparator.comparing(Pack::getWeight)
+                .thenComparing(Pack::getPricePerCargoUnit));
+
+        BigDecimal maxPrice = BigDecimal.valueOf(
+                shipment.getPackages().get(shipment.getPackages().size() - 1).getPricePerCargoUnit());
+
+        return new Price(maxPrice, shipment.getCurrency());
     }
 
     private void isValidate(Shipment shipment) {
@@ -42,7 +47,7 @@ public class TariffCalculateUseCase {
 
         shipment.getPackages().forEach(t -> {
 
-            if (!t.weight().greaterThan(new Weight(new BigInteger(String.valueOf(150000))))) {
+            if (!t.getWeight().greaterThan(new Weight(new BigInteger(String.valueOf(150000))))) {
                 throw new RuntimeException("Weight of Package is more then 1500 kg");
             }
 
@@ -53,45 +58,42 @@ public class TariffCalculateUseCase {
     private void dimensionsLimiterChecker(Shipment shipment) {
 
         for (Pack cargoUnit : shipment.getPackages()) {
-            if (cargoUnit.dimensions().height().length() > 1500 || cargoUnit.dimensions().height().length() < 1) {
+            if (cargoUnit.getDimensions().height().length() > 1500 || cargoUnit.getDimensions().height().length() < 1) {
                 throw new RuntimeException("Weight of Package height is more then 1500 cm or less then 1 cm");
             }
 
-            if (cargoUnit.dimensions().width().length() > 1500 || cargoUnit.dimensions().width().length() < 1) {
+            if (cargoUnit.getDimensions().width().length() > 1500 || cargoUnit.getDimensions().width().length() < 1) {
                 throw new RuntimeException("Weight of Package width is more then 1500 cm or less then 1 cm");
             }
 
-            if (cargoUnit.dimensions().length().length() > 1500 || cargoUnit.dimensions().length().length() < 1) {
+            if (cargoUnit.getDimensions().length().length() > 1500 || cargoUnit.getDimensions().length().length() < 1) {
                 throw new RuntimeException("Weight of Package length is more then 1500 cm or less then 1 cm");
             }
         }
     }
 
-    private List<Double> computerOfVolumes(Shipment shipment) {
-
-        List<Double> result = new ArrayList<>();
+    private void computerOfVolumes(Shipment shipment) {
 
         for (Pack cargo : shipment.getPackages()) {
             double volumeOfCargo = ((double)
-                    (cargo.dimensions().height().length()
-                    * cargo.dimensions().length().length()
-                    * cargo.dimensions().width().length()
+                    (cargo.getDimensions().height().length()
+                    * cargo.getDimensions().length().length()
+                    * cargo.getDimensions().width().length()
                     ) / 1_000_000_000);
 
-            result.add(Math.round(volumeOfCargo * 10_000d) / 10_000d);
+            cargo.setVolumeOfCargoUnit(Math.round(volumeOfCargo * 10_000d) / 10_000d);
         }
-
-        return result;
     }
 
-    private List<Double> computerOfPriceFullVolumeOfPackages(List<Double> packageVolumesList) {
+    private void computerOfPriceFullVolumeOfPackages(Shipment shipment) {
 
-        List<Double> resultPricePerPackageList = new ArrayList<>();
+        Double totalVolumeOfCargo = 0.0d;
 
-        for (Double cargo : packageVolumesList) {
-            resultPricePerPackageList.add(cargo * costPerKgs);
+        for (Pack cargo : shipment.getPackages()) {
+            cargo.setPricePerCargoUnit(cargo.getVolumeOfCargoUnit() * costPerKgs);
+            totalVolumeOfCargo += cargo.getVolumeOfCargoUnit();
         }
 
-        return resultPricePerPackageList;
+        shipment.setTotalVolumeOfCargo(totalVolumeOfCargo);
     }
 }

@@ -18,6 +18,10 @@ public class Shipment {
 
     List<Pack> packages;
 
+    Double totalVolumeOfCargo;
+
+    Double totalPrice;
+
     Currency currency;
 
     Destination destination;
