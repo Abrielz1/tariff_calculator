@@ -3,28 +3,39 @@ package ru.fastdelivery.domain.common.dimesions;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * @param length Длина
- * @param width Ширина
- * @param height Высота
+ * length Длина
+ * width  Ширина
+ * height Высота
  */
-public record CargoDimensions(
 
-        @Positive
-        @Min(1)
-        @Max(1500)
-        Length length,
+@Setter
+@Getter
+@Builder
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
+public class CargoDimensions {
 
-        @Positive
-        @Min(1)
-        @Max(1500)
-        Length  width,
+    @Positive
+    @Min(1)
+    @Max(1500)
+    private Length length;
 
-        @Positive
-        @Min(1)
-        @Max(1500)
-        Length  height
-) {
+    @Positive
+    @Min(1)
+    @Max(1500)
+    private Length width;
 
+    @Positive
+    @Min(1)
+    @Max(1500)
+    private Length height;
 }
