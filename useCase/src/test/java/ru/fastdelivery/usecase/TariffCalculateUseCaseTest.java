@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.delivery.Departure;
 import ru.fastdelivery.domain.common.delivery.Destination;
-import ru.fastdelivery.domain.common.destinations.CoordinatesValue;
 import ru.fastdelivery.domain.common.destinations.Latitude;
 import ru.fastdelivery.domain.common.destinations.Longitude;
 import ru.fastdelivery.domain.common.dimesions.CargoDimensions;
@@ -23,15 +22,11 @@ import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+
 import ru.fastdelivery.domain.common.currency.Currency;
-import org.mockito.MockitoAnnotations;
-import org.junit.jupiter.api.DisplayName;
-import org.assertj.core.util.BigDecimalComparator;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -63,13 +58,15 @@ class TariffCalculateUseCaseTest {
 
     private Departure departure; // ++
 
+    private Latitude latitudeDeparture; // ++
+
+    private Longitude longitudeDeparture; // ++
+
     private Destination destination; // ++
 
-    private CoordinatesValue coordinatesValue; // ++
+    private Latitude latitudeDestination; // ++
 
-    private Latitude latitude; // ++
-
-    private Longitude longitude; // ++
+    private Longitude longitudeDestination; // ++
 
     private CargoDimensions cargoDimensions; // ++
 
@@ -97,15 +94,20 @@ class TariffCalculateUseCaseTest {
 
         lengthLength = new Length(1400);
 
-        destination = new Destination(latitude, longitude);
 
-        departure = new Departure(latitude, longitude);
+        latitudeDestination = new Latitude(53.0d);
 
-        coordinatesValue = new CoordinatesValue(BigDecimal.valueOf(0.0d));
+        longitudeDestination = new Longitude(58.0d);
 
-        latitude = new Latitude(coordinatesValue);
+        destination = new Destination(latitudeDestination, longitudeDestination);
 
-        longitude = new Longitude(coordinatesValue);
+
+        latitudeDeparture = new Latitude(45.0d);
+
+        longitudeDeparture = new Longitude(55.0d);
+
+        departure = new Departure(latitudeDeparture, longitudeDeparture);
+
 
         cargoDimensions = new CargoDimensions(lengthLength, lengthWidth, lengthHeight);
 

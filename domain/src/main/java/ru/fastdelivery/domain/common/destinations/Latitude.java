@@ -1,4 +1,4 @@
 package ru.fastdelivery.domain.common.destinations;
 
-public record Latitude(CoordinatesValue coordinates) {
+public record Latitude(Double coordinates) {
 }
