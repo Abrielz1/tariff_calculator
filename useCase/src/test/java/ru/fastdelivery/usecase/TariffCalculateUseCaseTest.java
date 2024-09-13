@@ -1,13 +1,9 @@
 package ru.fastdelivery.usecase;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Value;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.delivery.Departure;
@@ -20,27 +16,24 @@ import ru.fastdelivery.domain.common.price.Price;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
-import java.math.BigDecimal;
+
 import java.math.BigInteger;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-
 import ru.fastdelivery.domain.common.currency.Currency;
 
-
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
+@RequiredArgsConstructor
 class TariffCalculateUseCaseTest {
 
-    @Mock
-    private CurrencyFactory currencyFactory;
+    private final CurrencyFactory currencyFactory; // NPE
 
-    @InjectMocks
-    public TariffCalculateUseCase tariffCalculateUseCase;
+    public final TariffCalculateUseCase tariffCalculateUseCase;
+
 
     @Value("${cost.rub.perKg}")
-    private Integer costPerKgs;
+    private Integer costPerKgs; // NPE
 
     private Currency currency; // +
 
@@ -82,7 +75,7 @@ class TariffCalculateUseCaseTest {
     public void init() {
         //todo написать инициализацию груза и поставки
 
-        currency = currencyFactory.create("RUB");
+      //  currency = currencyFactory.create("RUB");
 
         // ============== 1st Package for Shipment ============
 
@@ -111,9 +104,10 @@ class TariffCalculateUseCaseTest {
 
         cargoDimensions = new CargoDimensions(lengthLength, lengthWidth, lengthHeight);
 
-        cargoUnit0 = new Pack(weight, cargoDimensions, (double) costPerKgs, 0.0d);
+        cargoUnit0 = new Pack(weight, cargoDimensions, 400.0, 0.0d);
 
         // ============== 1st Package for Shipment ============
+
 
         packageofCargoList = List.of(cargoUnit0);
 
@@ -123,5 +117,10 @@ class TariffCalculateUseCaseTest {
     @Test
     void calculatorPriceByCargoWeight() {
 
+        assertEquals(shipment.getPackages().size(), 1);
+
+
+        price = tariffCalculateUseCase.calculatorPriceByCargoWeight(shipment);
+        System.out.println(price.amount());
     }
 }

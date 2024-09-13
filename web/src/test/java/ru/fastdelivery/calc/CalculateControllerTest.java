@@ -1,31 +1,18 @@
 package ru.fastdelivery.calc;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import ru.fastdelivery.ControllerTest;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
-import ru.fastdelivery.domain.common.price.Price;
-import ru.fastdelivery.presentation.api.request.CalculatePackagesRequest;
-import ru.fastdelivery.presentation.api.request.CargoPackage;
-import ru.fastdelivery.presentation.api.response.CalculatePackagesResponse;
-import ru.fastdelivery.usecase.TariffCalculateUseCase;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
+import ru.fastdelivery.usecase.TariffCalculateUseCase_old;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 class CalculateControllerTest extends ControllerTest {
 
     final String baseCalculateApi = "/api/v1/calculate/";
     @MockBean
-    TariffCalculateUseCase useCase;
+    TariffCalculateUseCase_old useCase;
     @MockBean
     CurrencyFactory currencyFactory;
 

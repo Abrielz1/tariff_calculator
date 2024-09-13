@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.currency.CurrencyPropertiesProvider;
 import ru.fastdelivery.usecase.TariffCalculateUseCase;
-import ru.fastdelivery.usecase.TariffCalculateUseCaseImpl;
-import ru.fastdelivery.usecase.WeightPriceProvider;
 
 /**
  * Определение реализаций бинов для всех модулей приложения
@@ -21,6 +19,6 @@ public class Beans {
 
     @Bean
     public TariffCalculateUseCase tariffCalculateUseCase(CurrencyFactory factory) {
-        return new TariffCalculateUseCaseImpl(factory);
+        return new TariffCalculateUseCase(factory);
     }
 }
