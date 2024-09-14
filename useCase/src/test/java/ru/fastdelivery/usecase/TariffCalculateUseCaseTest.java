@@ -1,10 +1,7 @@
 package ru.fastdelivery.usecase;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.currency.CurrencyPropertiesProvider;
@@ -18,25 +15,18 @@ import ru.fastdelivery.domain.common.price.Price;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import ru.fastdelivery.domain.common.currency.Currency;
 
 class TariffCalculateUseCaseTest {
 
     CurrencyPropertiesProvider currencyProperties;
 
-    CurrencyFactory currencyFactory; // NPE
-
     TariffCalculateUseCase tariffCalculateUseCase;
-
-
-    @Value("${cost.rub.perKg}")
-    private Integer costPerKgs = 400; // NPE
 
     private Currency currency; // +
 
@@ -76,9 +66,6 @@ class TariffCalculateUseCaseTest {
 
     @BeforeEach
     public void init() {
-        //todo написать инициализацию груза и поставки
-
-      //  currency = currencyFactory.create("RUB");
 
         currency = new Currency("RUB");
 
@@ -127,12 +114,11 @@ class TariffCalculateUseCaseTest {
     }
 
     @Test
-    void calculatorPriceByCargoWeight() {
+    void calculatorPriceByCargoWeight() throws Exception {
 
         assertEquals(shipment.getPackages().size(), 1);
 
-
         price = tariffCalculateUseCase.calculatorPriceByCargoWeight(shipment);
-        System.out.println(price.amount());
+        assertEquals(BigDecimal.valueOf(672.0), price.amount());
     }
 }

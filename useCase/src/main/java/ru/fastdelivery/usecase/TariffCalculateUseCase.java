@@ -21,7 +21,7 @@ public class TariffCalculateUseCase {
     private final CurrencyFactory currencyFactory;
 
     @Value("${cost.rub.perKg}")
-    Integer costPerKgs = 400;
+    Integer costPerKgs;
 
     public Price calculatorPriceByCargoWeight(Shipment shipment) {
 
@@ -96,6 +96,10 @@ public class TariffCalculateUseCase {
     private void computerOfPriceFullVolumeOfPackages(Shipment shipment) {
 
         Double totalVolumeOfCargo = 0.0d;
+
+        if (costPerKgs == null) {
+            costPerKgs = 400;
+        }
 
         for (Pack cargo : shipment.getPackages()) {
             cargo.setPricePerCargoUnit(cargo.getVolumeOfCargoUnit() * costPerKgs);
