@@ -26,7 +26,7 @@ public class Pack implements Comparable<Pack> {
 
     @NotNull
     @Min(1)
-    @Max(150_000)
+    @Max(150000)
     private Weight weight;
 
     @NotNull

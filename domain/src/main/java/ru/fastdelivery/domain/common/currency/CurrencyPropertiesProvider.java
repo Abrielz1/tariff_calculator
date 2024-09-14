@@ -3,6 +3,7 @@ package ru.fastdelivery.domain.common.currency;
 /**
  * Проверка доступности использования валюты
  */
+
 public interface CurrencyPropertiesProvider {
     /**
      * @param code трехбуквенный код валюты

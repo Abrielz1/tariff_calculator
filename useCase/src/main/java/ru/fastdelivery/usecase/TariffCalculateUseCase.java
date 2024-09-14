@@ -21,7 +21,7 @@ public class TariffCalculateUseCase {
     private final CurrencyFactory currencyFactory;
 
     @Value("${cost.rub.perKg}")
-    Integer costPerKgs;
+    Integer costPerKgs = 400;
 
     public Price calculatorPriceByCargoWeight(Shipment shipment) {
 
@@ -50,8 +50,8 @@ public class TariffCalculateUseCase {
 
         shipment.getPackages().forEach(t -> {
 
-            if (!t.getWeight().greaterThan(new Weight(new BigInteger(String.valueOf(150000))))) {
-                throw new RuntimeException("Weight of Package is more then 1500 kg");
+            if (t.getWeight().greaterThan(new Weight(new BigInteger(String.valueOf(150000))))) {
+                throw new RuntimeException("Weight of Package is more then 150 kg");
             }
 
             this.dimensionsLimiterChecker(shipment);

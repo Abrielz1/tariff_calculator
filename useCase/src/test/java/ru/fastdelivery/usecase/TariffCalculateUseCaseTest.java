@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
+import ru.fastdelivery.domain.common.currency.CurrencyPropertiesProvider;
 import ru.fastdelivery.domain.common.delivery.Departure;
 import ru.fastdelivery.domain.common.delivery.Destination;
 import ru.fastdelivery.domain.common.destinations.Latitude;
@@ -16,24 +18,25 @@ import ru.fastdelivery.domain.common.price.Price;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
-
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import ru.fastdelivery.domain.common.currency.Currency;
 
-@RequiredArgsConstructor
 class TariffCalculateUseCaseTest {
 
-    private final CurrencyFactory currencyFactory; // NPE
+    CurrencyPropertiesProvider currencyProperties;
 
-    public final TariffCalculateUseCase tariffCalculateUseCase;
+    CurrencyFactory currencyFactory; // NPE
+
+    TariffCalculateUseCase tariffCalculateUseCase;
 
 
     @Value("${cost.rub.perKg}")
-    private Integer costPerKgs; // NPE
+    private Integer costPerKgs = 400; // NPE
 
     private Currency currency; // +
 
@@ -77,9 +80,17 @@ class TariffCalculateUseCaseTest {
 
       //  currency = currencyFactory.create("RUB");
 
+        currency = new Currency("RUB");
+
+        currencyProperties = code -> true;
+
+        CurrencyFactory currencyFactory = new CurrencyFactory(currencyProperties);
+
+        tariffCalculateUseCase = new TariffCalculateUseCase(currencyFactory);
+
         // ============== 1st Package for Shipment ============
 
-        weight = new Weight(BigInteger.valueOf(1000));
+        weight = new Weight(BigInteger.valueOf(150000));
 
         lengthWidth = new Length(1200);
 
@@ -109,7 +120,8 @@ class TariffCalculateUseCaseTest {
         // ============== 1st Package for Shipment ============
 
 
-        packageofCargoList = List.of(cargoUnit0);
+        packageofCargoList = new ArrayList<>();
+        packageofCargoList.add(cargoUnit0);
 
         shipment = new Shipment(packageofCargoList, 0.0d, 0.0d, currency, destination, departure);
     }
