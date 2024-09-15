@@ -167,9 +167,47 @@ public class TariffCalculateUseCase {
 
     private Integer distanceBetweenDepartureAndDestinationComputer(Shipment shipment) {
 
+        Integer finalResult = 0;
+
+        Double tempResult = 0.0d;
+
+        Double PI = 3.14159265358979d;
+
+        Double radiusEarthSphere = 6372795d;
+
+        Double divisor = PI / 180;
+
+
+        Double latitudeOfDepartureInRadians = shipment.getDeparture().latitude().coordinates() * divisor;
+
+        Double longitudeOfDepartureInRadians =shipment.getDeparture().longitude().coordinates() * divisor;
+
+
+        Double latitudeOfDestinationInRadians = shipment.getDestination().latitude().coordinates() * divisor;
+
+        Double longitudeOfDestinationInRadians = shipment.getDestination().longitude().coordinates() * divisor;
+
+
+        Double cosinesOfLatitudeDeparture = Math.cos(latitudeOfDepartureInRadians);
+
+        Double cosinesOfLatitudeDestination = Math.cos(longitudeOfDepartureInRadians);
+
+        Double sinusOfLatitudeDeparture = Math.sin(latitudeOfDestinationInRadians);
+
+        Double sinusOfLatitudeDestination = Math.sin(longitudeOfDestinationInRadians);
+
+
+        Double deltaBetweenDepartureAndDestinationLongitudes = longitudeOfDestinationInRadians - longitudeOfDepartureInRadians;
+
+        Double cosinesDeltaBetweenDepartureAndDestinationLongitudes = Math.cos(deltaBetweenDepartureAndDestinationLongitudes);
+
+        Double sinusDeltaBetweenDepartureAndDestinationLongitudes = Math.sin(deltaBetweenDepartureAndDestinationLongitudes);
+
+
+
         // TODO сделать расчёт по этой формуле
 
-        return 0;
+        return finalResult;
     }
 
     private Double costOfShipmentBetweenDepartureAndDestinationComputer(Shipment shipment, Integer distance) {
