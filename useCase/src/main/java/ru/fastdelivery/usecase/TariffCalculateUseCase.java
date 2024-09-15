@@ -167,10 +167,6 @@ public class TariffCalculateUseCase {
 
     private Integer distanceBetweenDepartureAndDestinationComputer(Shipment shipment) {
 
-        Integer finalResult = 0;
-
-        Double tempResult = 0.0d;
-
         Double PI = 3.14159265358979d;
 
         Double radiusEarthSphere = 6372795d;
@@ -204,10 +200,18 @@ public class TariffCalculateUseCase {
         Double sinusDeltaBetweenDepartureAndDestinationLongitudes = Math.sin(deltaBetweenDepartureAndDestinationLongitudes);
 
 
+        Double yCoordinate = Math.sqrt(Math.pow(sinusOfLatitudeDestination * sinusDeltaBetweenDepartureAndDestinationLongitudes, 2)
+                + Math.pow(cosinesOfLatitudeDeparture * sinusOfLatitudeDestination -
+                sinusOfLatitudeDeparture * cosinesOfLatitudeDestination * cosinesDeltaBetweenDepartureAndDestinationLongitudes, 2));
 
-        // TODO сделать расчёт по этой формуле
+        Double xCoordinate = sinusOfLatitudeDeparture*sinusOfLatitudeDestination
+                + cosinesOfLatitudeDeparture * cosinesOfLatitudeDestination * cosinesDeltaBetweenDepartureAndDestinationLongitudes;
 
-        return finalResult;
+        Double ad = Math.atan2(yCoordinate, xCoordinate);
+
+        Double distanceOfBigCircle = ad * radiusEarthSphere;
+
+        return Math.toIntExact(Math.round(distanceOfBigCircle));
     }
 
     private Double costOfShipmentBetweenDepartureAndDestinationComputer(Shipment shipment, Integer distance) {
