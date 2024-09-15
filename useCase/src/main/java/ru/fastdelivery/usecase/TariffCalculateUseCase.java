@@ -11,7 +11,7 @@ import ru.fastdelivery.domain.delivery.shipment.Shipment;
 import javax.inject.Named;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Comparator;
+import java.math.RoundingMode;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named
@@ -23,6 +23,10 @@ public class TariffCalculateUseCase {
     @Value("${cost.rub.perKg}")
     Integer costPerKgs;
 
+    @Value("${cost.rub.minimalDistancePrice}")
+    Integer costOfMinimalDistance;
+
+
     public Price calculatorPriceByCargoWeight(Shipment shipment) {
 
         this.isValidate(shipment);
@@ -31,13 +35,12 @@ public class TariffCalculateUseCase {
 
         shipment.setTotalPrice(shipment.getTotalVolumeOfCargo() * shipment.getTotalVolumeOfCargo());
 
-        shipment.getPackages().sort(Comparator.comparing(Pack::getWeight)
-                .thenComparing(Pack::getPricePerCargoUnit));
+        Integer distanceBetweenDepartureAndDestination = this.distanceBetweenDepartureAndDestinationComputer(shipment);
+        Double priceOfShipmentBetweenCoordinates = this.costOfShipmentBetweenDepartureAndDestinationComputer(shipment,
+                distanceBetweenDepartureAndDestination);
 
-        BigDecimal maxPrice = BigDecimal.valueOf(
-                shipment.getPackages().get(shipment.getPackages().size() - 1).getPricePerCargoUnit());
-
-        return new Price(maxPrice, shipment.getCurrency());
+        return new Price(BigDecimal.valueOf(priceOfShipmentBetweenCoordinates).setScale(2, RoundingMode.HALF_UP),
+                shipment.getCurrency());
     }
 
     private void isValidate(Shipment shipment) {
@@ -160,5 +163,26 @@ public class TariffCalculateUseCase {
                 ));
             }
         }
+    }
+
+    private Integer distanceBetweenDepartureAndDestinationComputer(Shipment shipment) {
+
+        // TODO сделать расчёт по этой формуле
+
+        return 0;
+    }
+
+    private Double costOfShipmentBetweenDepartureAndDestinationComputer(Shipment shipment, Integer distance) {
+
+        if (costOfMinimalDistance == null || costOfMinimalDistance == 0) {
+            costOfMinimalDistance = 450;
+        }
+
+        if (distance <= costOfMinimalDistance) {
+
+            return shipment.getTotalVolumeOfCargo();
+        }
+
+        return ((double) distance / costOfMinimalDistance) * shipment.getTotalVolumeOfCargo();
     }
 }

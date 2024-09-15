@@ -75,7 +75,7 @@ class TariffCalculateUseCaseTest {
 
         tariffCalculateUseCase = new TariffCalculateUseCase(currencyFactory);
 
-        // ============== 1st Package for Shipment ============
+        // ==============  First Package for Shipment ============
 
         weight = new Weight(BigInteger.valueOf(150000));
 
@@ -85,26 +85,29 @@ class TariffCalculateUseCaseTest {
 
         lengthLength = new Length(1400);
 
+        //================================== First coordinates From
 
-        latitudeDestination = new Latitude(53.0d);
+        latitudeDeparture = new Latitude(45.398660d);
 
-        longitudeDestination = new Longitude(58.0d);
-
-        destination = new Destination(latitudeDestination, longitudeDestination);
-
-
-        latitudeDeparture = new Latitude(45.0d);
-
-        longitudeDeparture = new Longitude(55.0d);
+        longitudeDeparture = new Longitude(55.027532d);
 
         departure = new Departure(latitudeDeparture, longitudeDeparture);
 
+        //================================== First coordinates To
+
+        destination = new Destination(latitudeDestination, longitudeDestination);
+
+        latitudeDestination = new Latitude(53.446008d);
+
+        longitudeDestination = new Longitude(58.339151d);
+
+        //================================= First Package
 
         cargoDimensions = new CargoDimensions(lengthLength, lengthWidth, lengthHeight);
 
         cargoUnit0 = new Pack(weight, cargoDimensions, 400.0, 0.0d);
 
-        // ============== 1st Package for Shipment ============
+        // ============== 1st Package for Shipment packing into List ============
 
 
         packageofCargoList = new ArrayList<>();
